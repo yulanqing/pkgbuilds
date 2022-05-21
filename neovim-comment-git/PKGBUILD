@@ -1,0 +1,27 @@
+# Maintainer: Lanqing Yu <yulanqing126@gmail.com>
+pkgname=neovim-comment-git
+pkgver=r125.40f5587
+pkgrel=1
+pkgdesc="A smart and powerful commenting plugin for Neovim"
+arch=('any')
+url="https://github.com/numToStr/Comment.nvim"
+license=('MIT')
+depends=('neovim>=0.6.0')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+install=
+source=("$pkgname::git+$url")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$pkgname"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+	cd "$pkgname"
+        find after doc lua -type f -exec install -Dm 644 '{}' "$pkgdir/usr/share/nvim/runtime/pack/dist/start/$pkgname/{}" \;
+	install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+        install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname/"
+}
