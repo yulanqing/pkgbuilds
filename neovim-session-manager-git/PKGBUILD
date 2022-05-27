@@ -1,0 +1,26 @@
+# Maintainer: Lanqing Yu <yulanqing126@gmail.com>
+pkgname=neovim-session-manager-git
+pkgver=r77.f0b0501
+pkgrel=1
+pkgdesc="A Neovim plugin that manages sessions like VSCode"
+arch=('any')
+url="https://github.com/Shatur/neovim-session-manager"
+license=('GPL3')
+depends=('neovim>=0.7.0')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+install=
+source=("$pkgname::git+$url")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$pkgname"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+	cd "$pkgname"
+        find lua plugin -type f -exec install -Dm 644 '{}' "$pkgdir/usr/share/nvim/runtime/pack/dist/start/$pkgname/{}" \;
+        install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname/"
+}
